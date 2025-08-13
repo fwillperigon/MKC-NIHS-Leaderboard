@@ -34,5 +34,4 @@ row.appendChild(it);
 row.appendChild(subsix);
 
 lb.appendChild(row);
-
 }
