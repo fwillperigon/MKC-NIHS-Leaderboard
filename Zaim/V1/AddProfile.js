@@ -17,13 +17,13 @@ var TmpPassword = "";
 var TmpClassroom = 0;
 var TmpYear = 0;
 var TmpPfp = "";
-var AvailablePfp = []
+
 
 TmpName = prompt("Please enter the racer's name");
 TmpPassword = prompt("Please enter the racer's password");
 TmpClassroom = parseFloat(prompt("Please enter the racer's classroom"));
 TmpYear = parseInt(prompt("Please enter the racer's year level"));
-TmpPfp = parseInt(prompt("Please select which profile picture you want \n1. Mario \n2. Luigi \n3. Bowser \n4. Princess Peach"));
+TmpPfp = parseInt(prompt("Please select which profile picture you want \n1. Mario \n2.Luigi \n3. Bowser \n4. Princess Peach"));
 
 if (TmpPfp == 1)
     TmpPfp = "Mario"
@@ -42,7 +42,7 @@ TmpProfile = {
     "Classroom": TmpClassroom,
     "Year": TmpYear,
     "Pfp": TmpPfp,
-    "stats": [["wins", 0],["loss", 0],["items", 0], ["subsix", 0],["score", 0]]
+    "stats": [0,0,0]
 }
 
 console.log(TmpProfile)

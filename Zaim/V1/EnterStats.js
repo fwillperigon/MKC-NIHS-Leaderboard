@@ -22,7 +22,3 @@ if (Users.name === undefined){
 } else {
     alert("Displaying leaderboard")
 }
-
-
-
-// i am awesome
