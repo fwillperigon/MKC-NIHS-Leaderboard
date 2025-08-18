@@ -107,11 +107,19 @@ function Encrypt(pass)
 
     var InvSBox = 
     [
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
+        5,7,4,2,
+        14,12,0,8,
+        6,13,15,1,
+        11,3,10,9,
     ];
+
+    var TestScramble = 
+    [
+        0,1,2,3,
+        4,5,6,7,
+        8,9,10,11,
+        12,13,14,15
+    ]
 
     var TempBox = 
     [
@@ -121,14 +129,30 @@ function Encrypt(pass)
         13, 14, 15, 16
     ];
 
-    for (var i = 0; i < 16; i++)
+    for (var j = 0; j < 85; j++)
     {
-        TempBox[i] = InvSBox[SBox[i]];
+        for (var i = 0; i < 16; i++)
+        {
+            TempBox[i] = SBox[TestScramble[i]];
+        }
+        for (var i = 0; i < 16; i++)
+        {
+            TestScramble[i] = TempBox[i];
+        }
     }
 
-    for (var i = 0; i < 16; i++)
+    console.log(TempBox);
+
+    for (var j = 0; j < 85; j++)
     {
-        TempBox[i] = TempBox[SBox[i]];
+        for (var i = 0; i < 16; i++)
+        {
+            TempBox[i] = SBox[InvSBox[i]];
+        }
+        for (var i = 0; i < 16; i++)
+        {
+            TestScramble[i] = TempBox[i];
+        }
     }
 
     console.log(TempBox);
