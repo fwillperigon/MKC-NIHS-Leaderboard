@@ -1,7 +1,7 @@
 function UserObject(name, password, power, classcode, year, pfp)
 {
     this.name = name;
-    this.psasword = password;
+    this.password = password;
     this.power = power;
     this.classcode = classcode;
     this.year = year;
@@ -94,6 +94,8 @@ function Register()
     // add user to database
 }
 
+
+// work on later
 function Encrypt(pass)
 {
     const key = "29OJLjvs1y3GstLyhN0UmUgfTpdh/y0xk95ntfjmeBk=";
@@ -154,6 +156,9 @@ function Encrypt(pass)
             TestScramble[i] = TempBox[i];
         }
     }
+
+    var temp = key[3];
+    console.log(temp);
 
     console.log(TempBox);
 }
