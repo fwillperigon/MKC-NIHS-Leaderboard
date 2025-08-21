@@ -12,12 +12,12 @@ function UserObject(name, password, power, classcode, year, pfp)
 const lowercase_test = new RegExp("[a-z]+");
 const uppercase_test = new RegExp("[A-Z]+");
 const number_test = new RegExp("[0-9]+");
-const special_test = new RegExp("[!@#$%^&*?]+");
+const special_test = new RegExp("[! #$%&'()*+,-./:;<=>?@]+");
 
 function main()
 {
     //Register();
-    Encrypt("hi");
+    Encrypt("perigon");
 }
 
 function CheckPassword(pass)
@@ -37,15 +37,17 @@ function CheckPassword(pass)
 
     if (pass.length < 6)
         return 1;
+    else if (pass.length > 16)
+        return 2;
 
     if (!lower)
-        return 2;
-    else if (!upper)
         return 3;
-    else if (!number)
+    else if (!upper)
         return 4;
-    else if (!special)
+    else if (!number)
         return 5;
+    else if (!special)
+        return 6;
     else
         return 0;
 }
@@ -66,18 +68,21 @@ function Register()
         switch (passcheck)
         {
             case 1:
-                alert("Password too short");
+                alert("Password too short! At least characters");
                 break;
             case 2:
-                alert("No lowercase letters");
+                alert("Password too long! Keep within 16 characters");
                 break;
             case 3:
-                alert("No uppercase letters");
+                alert("No lowercase letters");
                 break;
             case 4:
-                alert("No numbers");
+                alert("No uppercase letters");
                 break;
             case 5:
+                alert("No numbers");
+                break;
+            case 6:
                 alert("No special characters");
                 break;
             default:
@@ -98,53 +103,39 @@ function Register()
 // work on later
 function Encrypt(pass)
 {
-    const key = "29OJLjvs1y3GstLyhN0UmUgfTpdh/y0xk95ntfjmeBk=";
-    const SBox = 
+    const key = "29OJLjvs1y3GstLy";
+
+    var passarray = 
     [
-        6, 11, 3, 13,
-        2, 0, 8, 1,
-        7, 15, 14, 12,
-        5, 9, 4, 10
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
     ];
 
-    var InvSBox = 
-    [
-        5,7,4,2,
-        14,12,0,8,
-        6,13,15,1,
-        11,3,10,9,
-    ];
+    for (var i = 0; i < pass.length; i++)
+    {
+        passarray[i] = pass.charCodeAt(i);
+    }
 
-    var TestScramble = 
-    [
-        0,1,2,3,
-        4,5,6,7,
-        8,9,10,11,
-        12,13,14,15
-    ]
-
-    var TempBox = 
-    [
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
-    ];
-
-    for (var j = 0; j < 85; j++)
+    for (var j = 0; j < 10; j++)
     {
         for (var i = 0; i < 16; i++)
         {
-            TempBox[i] = SBox[TestScramble[i]];
+            passarray[i] = sbox[passarray[i]];
         }
-        for (var i = 0; i < 16; i++)
-        {
-            TestScramble[i] = TempBox[i];
-        }
+        shiftRows(passarray);
     }
 
-    console.log(TempBox);
+    for (var i = 0; i < 16; i++)
+    {
+        passarray[i] = String.fromCharCode(passarray[i]);
+    }
 
+    var returnpass = passarray.join("");    
+
+/*
+    //console.log(TempBox);
     for (var j = 0; j < 85; j++)
     {
         for (var i = 0; i < 16; i++)
@@ -156,9 +147,40 @@ function Encrypt(pass)
             TestScramble[i] = TempBox[i];
         }
     }
+*/
 
-    var temp = key[3];
-    console.log(temp);
-
-    console.log(TempBox);
+    console.log(returnpass);
 }
+
+function shiftRows(arr)
+{
+    swapArr(arr, 4, 7);
+    swapArr(arr, 4, 6);
+    swapArr(arr, 4, 5);
+
+    swapArr(arr, 8, 10);
+    swapArr(arr, 9, 11);
+
+    swapArr(arr, 15, 12);
+    swapArr(arr, 15, 13);
+    swapArr(arr, 15, 14);
+}
+
+function swapArr(arr, a, b)
+{
+    temp = arr[a];
+    arr[a] = arr[b]
+    arr[b] = temp;
+}
+
+const sbox = 
+[
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    121, 55, 93, 88, 66, 61, 53, 110, 112, 77, 126, 41, 82, 81, 62, 43, 
+    69, 65, 104, 109, 70, 44, 100, 78, 40, 50, 36, 96, 114, 54, 103, 87, 
+    115, 102, 111, 116, 52, 107, 117, 80, 37, 120, 39, 106, 101, 123, 68, 
+    38, 85, 91, 71, 67, 95, 49, 119, 124, 99, 113, 72, 48, 56, 42, 76, 51, 
+    90, 75, 98, 118, 92, 59, 105, 63, 74, 73, 97, 33, 64, 89, 122, 58, 60, 
+    57, 34, 125, 108, 46, 84, 79, 86, 45, 83, 35, 94, 47
+]
