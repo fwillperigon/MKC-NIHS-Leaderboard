@@ -37,10 +37,12 @@ function lsGet()
     if (getval == null)
     {
         localStorage.setItem("users", "{}");
+        return 1;
     }
     else
     {
         users = JSON.parse(getval);
+        return 0;
     }
 }
 

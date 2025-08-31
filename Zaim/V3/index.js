@@ -47,31 +47,31 @@ function AddProfile(){
     // determine their pfp (Profile picture)
     if (TmpPfp == 1)
         TmpPfp = "/Pfp/Mario.png"
-        else if (TmpPfp == 2)
-            TmpPfp = "/Pfp/Luigi.png"
-            else if (TmpPfp == 3)
-                TmpPfp = "/Pfp/Bowser.png"
-                else
-                    TmpPfp = "/Pfp/Princess_Peach.png"
+    else if (TmpPfp == 2)
+        TmpPfp = "/Pfp/Luigi.png"
+    else if (TmpPfp == 3)
+        TmpPfp = "/Pfp/Bowser.png"
+    else
+        TmpPfp = "/Pfp/Princess_Peach.png"
 
-                    console.log(TmpPfp)
+    console.log(TmpPfp)
 
-                    // create a temporary profile
-                    /*
-                    TmpProfile = {
-                        "name": TmpName,
-                        "Password": TmpPassword,
-                        "Classroom": TmpClassroom,
-                        "Year": TmpYear,
-                        "Pfp": TmpPfp,
-                        "stats": [["wins", 0],["loss", 0],["items", 0], ["subsix", 0],["score", 0]]
-                    }
-                    */
+    // create a temporary profile
+    /*
+    TmpProfile = {
+        "name": TmpName,
+        "Password": TmpPassword,
+        "Classroom": TmpClassroom,
+        "Year": TmpYear,
+        "Pfp": TmpPfp,
+        "stats": [["wins", 0],["loss", 0],["items", 0], ["subsix", 0],["score", 0]]
+    }
+    */
 
-                    var TmpProfile = new UserObject(TmpName, TmpPassword, 0, TmpClassroom, TmpYear, TmpPfp)
+    var TmpProfile = new UserObject(TmpName, TmpPassword, 0, TmpClassroom, TmpYear, TmpPfp)
 
-                    // log the temporary profile
-                    console.log(TmpProfile)
+    // log the temporary profile
+    console.log(TmpProfile)
 }
 
 function UserProfile(){
