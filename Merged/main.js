@@ -6,7 +6,7 @@ function UserObject(name, password, power, classcode, year, pfp)
     this.classcode = classcode;
     this.year = year;
     this.pfp = pfp;
-    this.stats = [];
+    this.stats = { "wins": 0, "loss": 0, "score": 0 };
 }
 
 var users = new Array();
@@ -19,7 +19,6 @@ const special_test = new RegExp("[! #$%&'()*+,-./:;<=>?@]+");
 function main()
 {
     users.push(zaim);
-    console.log(users);
     EnterStats();
 }
 
@@ -32,11 +31,237 @@ function EnterStats()
         Register()
 
     } else {
-        alert("Displaying leaderboard")
+        //alert("Displaying leaderboard")
     }
 }
 
+function UserProfile(){
+    // initalise variables
+    var Users = [];
+    var choice = 0;
+    var user = "";
+    var UserFound = false;
+    var menu = "";
+    var which = 0;
+    var action = 0;
+    var value = 0;
+    var idx = 0;
+    var currentVal = 0;
+    var message = "";
+    var i = 0;
+    var j = 0;
+    var k = 0;
 
+
+    choice = parseInt(prompt("What would you like to do? \n1. Display Stats \n2. Edit Stats \n 3. Add Profile"));
+
+    if (choice == 1) {
+        
+    }
+    else if (choice == 2) {
+        
+
+        if (!UserFound){
+            alert("User not found");
+        }
+    }
+    else
+        AddProfile();
+}
+
+function DisplayStats()
+{
+    var user = "";
+    var j = 0;
+
+    user = prompt("Whose stats would you like to view? (enter name)");
+    var foundUser = GetUser(user);
+
+    alert(`${foundUser.name}'s Stats:\nWins: ${foundUser.stats["wins"]}\nLoss: ${foundUser.stats["loss"]}\nScore: ${foundUser.stats["score"]}`);
+}
+
+function EditStats()
+{
+    var user = "";
+    var menu = "";
+    var which = 0;
+    var action = 0;
+    var value = 0;
+    var idx = 0;
+    var currentVal = 0;
+    var message = "";
+    var j = 0;
+    var k = 0;
+
+    user = prompt("Whose stats would you like to edit? (enter name)");
+    var foundUser = GetUser(user);
+
+    // build a menu of stats using a nested loop
+    menu = "Select the stat to edit for " + foundUser.name + ":\n1. Wins (current: " + foundUser.stats["wins"] + ")\n2. Loss (current: " + foundUser.stats["loss"] + ")\n3. Score (current: " + foundUser.stats["score"] + ")";
+
+    which = parseInt(prompt(menu), 10);
+    if (isNaN(which) || which < 1 || which > foundUser.stats.length) {
+        alert("Invalid stat selection.");
+    } else {
+        var statConvert = "";
+        switch(which)
+        {
+        case 1:
+            statConvert = "wins";
+            break;
+        case 2:
+            statConvert = "loss";
+            break;
+        case 3:
+            statConvert = "score";
+            break;
+        }
+
+        console.log(statConvert);
+
+        action = parseInt(prompt("What would you like to do?\n1. Set a new value\n2. Add to current value\n3. Subtract from current value"), 10);
+        value = parseInt(prompt("Enter a number:"), 10);
+
+        if (isNaN(value)) {
+            alert("Invalid number entered.");
+        } else {
+            currentVal = parseInt(foundUser.stats[statConvert], 10) || 0;
+
+            if (action === 1) {
+                foundUser.stats[statConvert] = value;
+            } else if (action === 2) {
+                foundUser.stats[statConvert] = currentVal + value;
+            } else if (action === 3) {
+                foundUser.stats[statConvert] = currentVal - value;
+            } else {
+                alert("Invalid action.");
+            }
+
+            alert(`${foundUser.name}'s updated stats:\nWins: ${foundUser.stats["wins"]}\nLoss: ${foundUser.stats["loss"]}\nScore: ${foundUser.stats["score"]}\n`);
+            lsPush();
+        }
+    }
+}
+
+// HUNTER FUNCTIONS
+
+function createStatCell(statName, user, onChangeCallback) {
+    //Creates the cell for the table data.
+    var cell = document.createElement("td");
+
+    //creates the span to ensure pressing a button doesn't overwrite all data in the table.
+    var countSpan = document.createElement("span");
+    countSpan.innerText = user.stats[statName];
+    // Keeps margins all lined up (Would have done in HTML but this frees up space.)
+    countSpan.style.marginRight = "10px";
+
+    // Creates a container to place the buttons next to each other.
+    var btnContainer = document.createElement("span");
+    btnContainer.style.display = "inline-flex";
+    btnContainer.style.gap = "5px";
+
+    // code for the decremental button to lower values
+    var decrementBtn = document.createElement("button");
+    decrementBtn.innerText = "-";
+    decrementBtn.style.minWidth = "25px";
+    // code detects/"listens" for when button is pressed, then lowers corresponding value by 1
+    decrementBtn.addEventListener("click", function () {
+        if (user.stats[statName] > 0) {
+            user.stats[statName]--;
+            countSpan.innerText = user.stats[statName];
+            if (onChangeCallback) onChangeCallback();
+        }
+        lsPush();
+    });
+
+    // code for the incremental button to raise values.
+    var incrementBtn = document.createElement("button");
+    incrementBtn.innerText = "+";
+    incrementBtn.style.minWidth = "25px";
+    // code detects/"listens" for when button is pressed, then raises corresponding value by 1
+    incrementBtn.addEventListener("click", function () {
+        user.stats[statName]++;
+        countSpan.innerText = user.stats[statName];
+        if (onChangeCallback) onChangeCallback();
+        lsPush();
+    });
+
+    btnContainer.appendChild(decrementBtn);
+    btnContainer.appendChild(incrementBtn);
+
+    cell.appendChild(countSpan);
+    cell.appendChild(btnContainer);
+
+    return cell;
+}
+
+function lbmain() {
+    var lb = document.getElementById("lb");
+    // loops the function so it creates at most 12 rows with data.
+    for (let i = 0; i < users.length; i++) {
+    // Starts creating elements for all the data
+        var row = document.createElement("tr");
+        var rank = document.createElement("td");
+            rank.innerHTML = i + 1;
+        var name = document.createElement("td");
+
+    // Create a button for the player names
+        var nameBtn = document.createElement("button");
+        nameBtn.innerText = users[i].name;
+
+    // Adds a click listener to detect when the button is clicked
+        nameBtn.addEventListener("click", function() {
+    // alert of DummyData (Will be replaced with calling Zaim's profile code when done)
+        alert(
+            "Name: " + users[i].name + "\n" +
+            "Year: " + users[i].year + "\n" +
+            "Classroom: " + users[i].classcode + "\n" +
+            "Wins: " + users[i].stats.wins + "\n" +
+            "Losses: " + users[i].stats.loss + "\n" +
+            "Items: " + users[i].stats.items + "\n" +
+            "Subsix: " + users[i].stats.subsix + "\n" +
+            "Score: " + users[i].stats.score
+        );
+    });
+    // Creates elements for the rest of the data
+        var yearlevel = document.createElement("td");
+            yearlevel.innerHTML = users[i].year;
+        var cc = document.createElement("td");
+            cc.innerHTML = users[i].classcode;
+        var score = document.createElement("td");
+            score.innerHTML = users[i].stats.score;
+
+    // Now, here's where things get further complex.
+    // Creates the win/loss ratio cell *first*, so it can be updated later
+        var wlr = document.createElement("td");
+
+        // Mini function to update the win/loss ratio cell
+        function updateWinLossRatio() {
+            let wins = users[i].stats["wins"];
+            let losses = users[i].stats["loss"];
+            // Calculates the win/loss ratio and displays it
+            //let ratio = losses === 0 ? wins : (wins / losses).toFixed(2);
+            //wlr.innerText = ratio;
+        }
+
+    // Create wins and loss cells, passing update callback to update the ratio live when a button is hit
+        var wins = createStatCell("wins", users[i], updateWinLossRatio);
+        var loss = createStatCell("loss", users[i], updateWinLossRatio);
+        wlr.innerText = users[i].stats["loss"] === 0 ? users[i].stats["wins"] : (users[i].stats["wins"] / users[i].stats["loss"]).toFixed(2);
+
+    // Calls the w/l ratio function once initially to set the first ratio
+        updateWinLossRatio();
+
+    // creates the rest of the stats
+        //var items = createStatCell("items", users[i]);
+        //var subsix = createStatCell("subsix", users[i]);
+
+    // appends all data and puts the name data inside of the cell
+        name.appendChild(nameBtn);
+        row.append(rank, users[i].name, yearlevel, cc, score, wins, loss, wlr);
+        lb.appendChild(row);
+    }
+}
 
 // FELIX FUNCTIONS
 
@@ -91,7 +316,6 @@ function Register()
     
     registeredUser = new UserObject(name, encryptedpass, 0, classcode, year, pfp);
     console.log(registeredUser);
-    console.log(users);
     AddUserObject(registeredUser, users);
 }
 
@@ -105,7 +329,7 @@ function lsGet()
     var getval = localStorage.getItem("users");
     if (getval == null)
     {
-        localStorage.setItem("users", "{}");
+        //localStorage.setItem("users", "{}");
         users = new Array();
         return 1;
     }
@@ -116,8 +340,35 @@ function lsGet()
     }
 }
 
+function GetUser(name)
+{
+    lsGet();
+    var size = users.length;
+    var userFound = false;
+    var userPosition = 0;
+
+    for (var i = 0; i < size; i++)
+    {
+        if (users[i].name == name)
+        {
+            userFound = true;
+            userPosition = i;
+        }
+    }
+
+    if (userFound)
+    {
+        return users[userPosition];
+    }
+    else
+    {
+        alert(`Could not find user with name ${name}`)
+    }
+}
+
 function AddUserObject(user, userArr)
 {
+    console.log(userArr);
     userArr.push(user);
     lsPush();
 }

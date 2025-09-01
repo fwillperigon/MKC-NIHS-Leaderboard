@@ -2,15 +2,25 @@
 
 <html>
     <head>
-        <title>Player Stats</title>
+        <title>MKC Leaderboard</title>
         <script src="main.js" lang="Javascript"></script>
     </head>
     <body>
-        <h1>Player Stats</h1>
-        <button type="button" onclick="Register();">Register</button>
-        <button type="button" onclick="">Edit Stats</button>
-        <button type="button" onclick="">Display Stats</button>
-
+        <h1>Mario Kart Club Leaderboard</h1>
+        <a href="profiles.html"><p>View Profiles</p></a>
+        <table id="lb" style="border: 1px solid black; width: 100%;">
+            <tr id="tr" style="border: 1px solid black; width: 100%">
+            <td>Rank</td>
+            <td>Name</td>
+            <td>Year Level</td>
+            <td>Connect Class</td>
+            <td>Score</td>
+            <td>Wins</td>
+            <td>Losses</td>
+            <td>Win/Loss Ratio</td>
+            </tr>
+        </table>
         <script>main();</script>
+        <script>lbmain();</script>
     </body>
 </html>
