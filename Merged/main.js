@@ -97,11 +97,20 @@ function EditStats()
     var foundUser = GetUser(user);
 
     // build a menu of stats using a nested loop
-    menu = "Select the stat to edit for " + foundUser.name + ":\n1. Wins (current: " + foundUser.stats["wins"] + ")\n2. Loss (current: " + foundUser.stats["loss"] + ")\n3. Score (current: " + foundUser.stats["score"] + ")";
+    menu = "Select the stat to edit for " + foundUser.name + ":\n1. Wins (current: " + foundUser.stats["wins"] + ")\n2. Loss (current: " + foundUser.stats["loss"] + ")\n3. Score (current: " + foundUser.stats["score"] + ")\n4. Profile Picture (current: " + foundUser.pfp + ")";
 
     which = parseInt(prompt(menu), 10);
     if (isNaN(which) || which < 1 || which > foundUser.stats.length) {
         alert("Invalid stat selection.");
+    } else if (which == 4){
+        var pfp = parseInt(prompt("Please select which profile picture you want \n1. Mario \n2. Luigi \n3. Bowser \n4. Princess Peach"));
+        while(pfp < 1 || pfp > 4)
+        {
+            alert("Invalid profile picture chosen. Try again");
+            pfp = parseInt(prompt("Please select which profile picture you want \n1. Mario \n2. Luigi \n3. Bowser \n4. Princess Peach"));
+        }
+        foundUser.pfp = pfp;
+        lsPush();
     } else {
         var statConvert = "";
         switch(which)
@@ -196,20 +205,30 @@ function createStatCell(statName, user, onChangeCallback) {
 }
 
 function lbmain() {
+    SortDatabase();
+
     var lb = document.getElementById("lb");
     // loops the function so it creates at most 12 rows with data.
     for (let i = 0; i < users.length; i++) {
     // Starts creating elements for all the data
         var row = document.createElement("tr");
         var rank = document.createElement("td");
-            rank.innerHTML = i + 1;
+        rank.innerHTML = i + 1;
+        var pfp = document.createElement("img");
+        var pfpsrc = users[i].pfp;
+        pfp.setAttribute("src", `pfp/${pfpsrc}.png`);
+        pfp.setAttribute("width", 50);
+        pfp.setAttribute("height", 50);
+
         var name = document.createElement("td");
+        name.innerHTML = users[i].name;
 
     // Create a button for the player names
-        var nameBtn = document.createElement("button");
-        nameBtn.innerText = users[i].name;
+        //var nameBtn = document.createElement("button");
+        //nameBtn.innerText = users[i].name;
 
     // Adds a click listener to detect when the button is clicked
+    /*
         nameBtn.addEventListener("click", function() {
     // alert of DummyData (Will be replaced with calling Zaim's profile code when done)
         alert(
@@ -223,6 +242,7 @@ function lbmain() {
             "Score: " + users[i].stats.score
         );
     });
+    */
     // Creates elements for the rest of the data
         var yearlevel = document.createElement("td");
             yearlevel.innerHTML = users[i].year;
@@ -257,13 +277,35 @@ function lbmain() {
         //var subsix = createStatCell("subsix", users[i]);
 
     // appends all data and puts the name data inside of the cell
-        name.appendChild(nameBtn);
-        row.append(rank, users[i].name, yearlevel, cc, score, wins, loss, wlr);
+        //name.appendChild(nameBtn);
+        row.append(rank, pfp, name, yearlevel, cc, score, wins, loss, wlr);
         lb.appendChild(row);
     }
 }
 
 // FELIX FUNCTIONS
+
+function SortDatabase()
+{
+    lsGet();
+    var sorted = false;
+
+    while (!sorted)
+    {
+        sorted = true;
+        for (var i = 0; i < users.length - 1; i++)
+        {
+            if (users[i].stats["score"] < users[i + 1].stats["score"])
+            {
+                var tempusr = users[i];
+                users[i] = users[i + 1];
+                users[i + 1] = tempusr;
+                sorted = false;
+            }
+        }
+    }
+
+}
 
 function Register()
 {
@@ -364,6 +406,69 @@ function GetUser(name)
     {
         alert(`Could not find user with name ${name}`)
     }
+}
+
+function GetUserPosition(name)
+{
+    lsGet();
+    var size = users.length;
+    var userFound = false;
+    var userPosition = 0;
+
+    for (var i = 0; i < size; i++)
+    {
+        if (users[i].name == name)
+        {
+            userFound = true;
+            userPosition = i;
+        }
+    }
+
+    if (userFound)
+    {
+        return userPosition;
+    }
+    else
+    {
+        alert(`Could not find user with name ${name}`)
+    }
+}
+
+function RemoveUser()
+{
+    lsGet();
+    var size = users.length;
+    var userFound = false;
+    var userPosition = 0;
+
+    var name = prompt("What is the name of the user you want to remove?");
+    var password = prompt("What is the password of the user you want to remove?");
+    password = Encrypt(password);
+
+    for (var i = 0; i < size; i++)
+    {
+        if (users[i].name == name)
+        {
+            if (users[i].password == password)
+            {
+                userFound = true;
+                userPosition = i;
+            }
+        }
+    }
+
+    if (userFound)
+    {
+        var spliced = users.splice(userPosition, size-userPosition);
+        spliced.shift();
+        users = users.concat(spliced);
+        alert(`User ${name} has been removed!`);
+    }
+    else
+    {
+        alert(`Could not find user with name ${name} and password ${password}`)
+    }
+    lsPush();
 }
 
 function AddUserObject(user, userArr)
