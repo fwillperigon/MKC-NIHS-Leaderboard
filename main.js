@@ -9,6 +9,7 @@ function UserObject(name, password, power, classcode, year, pfp)
     this.stats = { "wins": 0, "loss": 0, "score": 0 };
 }
 
+var loggedin = false;
 var users = new Array();
 var zaim = new UserObject("zaim", "miaz", 0, "12.10", 12, null);
 const lowercase_test = new RegExp("[a-z]+");
@@ -26,12 +27,21 @@ function main()
 
 function EnterStats()
 {
+    if (localStorage.getItem("loggedin") == "false")
+    {
+        loggedin = false;
+    }
+    else if (localStorage.getItem("loggedin") == "true")
+    {
+        loggedin = true;
+    }
+    else
+    {
+        loggedin = false;
+    }
     if (lsGet() == 1){
         alert("There are currently no users, please create some");
-        Register()
-
-    } else {
-        //alert("Displaying leaderboard")
+        Register();
     }
 }
 
@@ -359,6 +369,29 @@ function Register()
     registeredUser = new UserObject(name, encryptedpass, 0, classcode, year, pfp);
     console.log(registeredUser);
     AddUserObject(registeredUser, users);
+}
+
+function Login()
+{
+    var name = prompt("Input name");
+    var pass = prompt("Input password");
+
+    var login_succeed = false;
+
+    while(login_succeed == false)
+    {
+        if (Encrypt(pass) == GetUser(name).password)
+        {
+            login_succeed = true;
+            localStorage.setItem("loggedin", "true");
+            localStorage.setItem("account", name);
+        }
+        else
+        {
+            alert("Incorrect Password. Try Again");
+            pass = prompt("Input password");
+        }
+    }
 }
 
 function lsPush()
