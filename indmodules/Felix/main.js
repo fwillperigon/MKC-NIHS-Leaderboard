@@ -92,10 +92,7 @@ function Register()
     }
 
     var encryptedpass = Encrypt(pass);
-    
     registeredUser = new UserObject(name, encryptedpass, 0, classcode, year, null);
-    console.log(registeredUser);
-    // add user to database
 }
 
 function Login()
@@ -106,10 +103,18 @@ function Login()
     var login_succeed = false;
 
     while(login_succeed == false)
-    {
-        if (true)
+    {   
+        // encrypt entered password to check with account password
+        if (Encrypt(pass) == GetUser(name).password)
         {
-            
+            login_succeed = true;
+            localStorage.setItem("loggedin", "true");
+            localStorage.setItem("account", name);
+        }
+        else
+        {
+            alert("Incorrect Password. Try Again");
+            pass = prompt("Input password");
         }
     }
 }
@@ -128,24 +133,24 @@ function Encrypt(pass)
 
     for (var i = 0; i < pass.length; i++)
     {
-        passarray[i] = pass.charCodeAt(i);
+        passarray[i] = pass.charCodeAt(i);  // convert password string into ascii code equivalents
     }
 
     for (var j = 0; j < 10; j++)
     {
         for (var i = 0; i < 16; i++)
         {
-            passarray[i] = sbox[passarray[i]];
+            passarray[i] = sbox[passarray[i]];  // substitute characters in the array with corresponding entry in sbox
         }
-        shiftRows(passarray);
+        shiftRows(passarray);   // shift rows according to AES standard
     }
 
     for (var i = 0; i < 16; i++)
     {
-        passarray[i] = String.fromCharCode(passarray[i]);
+        passarray[i] = String.fromCharCode(passarray[i]);   // convert ascii characters back into a characters
     }
 
-    var returnpass = passarray.join("");    
+    var returnpass = passarray.join("");    // turn character array into string
     return returnpass;
 }
 
@@ -161,27 +166,27 @@ function Decrypt(pass)
 
     for (var i = 0; i < pass.length; i++)
     {
-        passarray[i] = pass.charCodeAt(i);
+        passarray[i] = pass.charCodeAt(i);  // convert password string into ascii code equivalents
     }
 
     for (var j = 0; j < 10; j++)
     {
         for (var i = 0; i < 16; i++)
         {
-            passarray[i] = invsbox[passarray[i]];
+            passarray[i] = invsbox[passarray[i]];   // substitute characters in the array with corresponding entry in inverse sbox
         }
-        antiShiftRows(passarray);
+        antiShiftRows(passarray);   // shift rows opposite to AES standard
     }
 
     for (var i = 0; i < 16; i++)
     {
         if (String.fromCharCode(passarray[i]) != '\x00')
-            passarray[i] = String.fromCharCode(passarray[i]);
+            passarray[i] = String.fromCharCode(passarray[i]);   // if real character, convert to character
         else
-            passarray.pop();
+            passarray.pop();    // if control character, ignore
     }
 
-    var returnpass = passarray.join("");    
+    var returnpass = passarray.join("");    // turn character array into string
     return returnpass;
 }
 

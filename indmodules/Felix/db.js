@@ -10,11 +10,6 @@ function UserObject(name, password, power, classcode, year, pfp)
 }
 
 var users = [];
-var zaim = new UserObject("zaim", "miaz", 0, "12.10", 12, null);
-var felix = new UserObject("felix", "xelif", 0, "12.09", 12, null);
-var hunter = new UserObject("hunter", "retnuh", 0, "12.01", 12, null);
-var connor = new UserObject("connor", "ronnoc", 0, "12.01", 12, null);
-var rob = new UserObject("rob", "bor", 0, "11.04", 11, null);
 
 function main()
 {
@@ -28,21 +23,22 @@ function main()
 
 function lsPush()
 {
+    // push the users aray to localstorage as a JSON string
     localStorage.setItem("users", JSON.stringify(users));
 }
 
 function lsGet()
 {
     var getval = localStorage.getItem("users");
-    if (getval == null)
+    if (getval == null) // if there is no "users" item in localstorage
     {
-        localStorage.setItem("users", "{}");
-        return 1;
+        localStorage.setItem("users", "{}");    // create an empty entry under the "users" key
+        return 1;   // siginfy that there are no users in the database
     }
     else
     {
-        users = JSON.parse(getval);
-        return 0;
+        users = JSON.parse(getval); // convert the JSON string in locastorage into an array
+        return 0;   // signify that there are users in the database
     }
 }
 
@@ -55,7 +51,7 @@ function GetUser(name)
 
     for (var i = 0; i < size; i++)
     {
-        if (users[i].name == name)
+        if (users[i].name == name)  // if the currently selected user in users array has the name we are looking for
         {
             userFound = true;
             userPosition = i;
@@ -64,11 +60,11 @@ function GetUser(name)
 
     if (userFound)
     {
-        return users[userPosition];
+        return users[userPosition]; // return the user object that was requested
     }
     else
     {
-        alert(`Could not find user with name ${name}`)
+        alert(`Could not find user with name ${name}`); // alert the user that the requested user does not exist
     }
 }
 
@@ -90,7 +86,7 @@ function GetUserPosition(name)
 
     if (userFound)
     {
-        return userPosition;
+        return userPosition;    // return the position in the database for the requested user
     }
     else
     {
@@ -100,8 +96,8 @@ function GetUserPosition(name)
 
 function AddUserObject(user)
 {
-    users.push(user);
-    lsPush();
+    users.push(user);   // push user object onto the user array
+    lsPush();   // push update to localstorage
 }
 
 function RemoveUser(name, password)
@@ -115,7 +111,7 @@ function RemoveUser(name, password)
     {
         if (users[i].name == name)
         {
-            if (users[i].password == password)
+            if (users[i].password == password)  // check the entered password matches the password linked to the account
             {
                 userFound = true;
                 userPosition = i;
@@ -125,14 +121,14 @@ function RemoveUser(name, password)
 
     if (userFound)
     {
-        var spliced = users.splice(userPosition, size-userPosition);
-        spliced.shift();
-        users = users.concat(spliced);
+        var spliced = users.splice(userPosition, size-userPosition);    // cut users array at the position of the user to be removed
+        spliced.shift();    // remove first element in the split array
+        users = users.concat(spliced);  // reconnect the arrays
         alert(`User ${name} has been removed!`);
     }
     else
     {
-        alert(`Could not find user with name ${name} and password ${password}`)
+        alert(`Could not find user with name ${name} and password ${password}`);
     }
     lsPush();
 }

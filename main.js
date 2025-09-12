@@ -506,7 +506,6 @@ function RemoveUser()
 
 function AddUserObject(user, userArr)
 {
-    console.log(userArr);
     userArr.push(user);
     lsPush();
 }
